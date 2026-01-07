@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-	  <Version>1.0.3</Version>
+    <TargetFramework>net8.0</TargetFramework>
+	  <Version>1.1.0</Version>
 	  <PackageId>Rewdboy.Umbraco.EditLink</PackageId>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="16.4.1" />
+    <PackageReference Include="Umbraco.Cms.Web.Website" Version="[14.0.0, 18.0.0)" />
   </ItemGroup>
 
   <ItemGroup>

@@ -46,6 +46,12 @@ CSS
     border-color: #d6a41d;
 }
 
+## Compatibility
+- Umbraco 14 (v14.x)
+- Umbraco 15 (v15.x)
+- Umbraco 16 (v16.x)
+- Umbraco 17 (v17.x)
+
 
 ## License
 This project is licensed under the MIT License.
