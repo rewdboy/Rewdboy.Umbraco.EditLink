@@ -1,0 +1,30 @@
+﻿
+.edit-page-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    background-color: #3544b1; /* Umbraco Lila */
+    color: white !important;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: all 0.2s ease-in-out;
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+    .edit-page-btn:hover {
+        transform: scale(1.1);
+        background-color: #2e3d75;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+
+    .edit-page-btn svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+    }
