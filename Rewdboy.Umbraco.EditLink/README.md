@@ -1,6 +1,7 @@
+
 # Umbraco Quick Edit Button
 
-A lightweight and non-intrusive package for **Umbraco 16** that adds a floating "Edit Page" button to your website's frontend. 
+A lightweight and non-intrusive package for **Umbraco 14+** that adds a floating "Edit Page" button to your website's frontend. 
 
 The button is only rendered for authenticated Backoffice users, providing a seamless shortcut directly to the current page's editor in the Umbraco Backoffice.
 
@@ -17,34 +18,31 @@ The button is only rendered for authenticated Backoffice users, providing a seam
 Run the following command in your terminal:
 ```bash
 dotnet add package Rewdboy.Umbraco.EditLink
+```
 
 ### 2. Register Tag Helpers
 Add the following line to your ~/Views/_ViewImports.cshtml file:
 
-Razor CSHTML
-
+```
 @addTagHelper *, Rewdboy.Umbraco.EditLink
-
+```
 
 ## Usage
-Place the Tag Helper inside your main layout file (e.g., _Layout.cshtml), ideally right after the opening <body> tag:
-
-Razor CSHTML
-
+Place the Tag Helper inside your main layout file (e.g., _Layout.cshtml), ideally right after the opening `<body>``` tag:
+```
 <umbraco-edit-button model="Model" />
-
+```
 
 ## Customization
-The button is rendered with the CSS class .edit-page-btn. You can override the default styling in your site's main CSS file.
+The button is rendered with the CSS **class .edit-page-btn**. You can override the default styling in your site's main CSS file.
 
 Example (changing to Umbraco Orange):
-
-CSS
-
+```
 .edit-page-btn {
     background-color: #f5c12e !important;
     border-color: #d6a41d;
 }
+```
 
 ## Compatibility
 - Umbraco 14 (v14.x)
