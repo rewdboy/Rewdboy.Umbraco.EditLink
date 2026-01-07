@@ -21,6 +21,12 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<RepositoryUrl>https://github.com/rewdboy/Rewdboy.Umbraco.EditLink</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+	</PropertyGroup>
+
 	<ItemGroup>
 	  <Content Include="css\editbutton.css">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
