@@ -3,5 +3,20 @@
   "name": "Rewdboy.Umbraco.EditLink",
   "version": "2.0.0",
   "allowTelemetry": true,
-  "extensions": []
+
+  "extensions": [],
+
+  "metadata": {
+    "displayName": "Edit Link (Front-end)",
+    "description": "Adds a small edit button to the front-end when logged into Umbraco backoffice, allowing quick access to edit mode for the current page.",
+    "author": "Rewdboy",
+    "documentationUrl": "https://github.com/rewdboy/Rewdboy.Umbraco.EditLink",
+    "license": "MIT",
+    "tags": [
+      "edit",
+      "frontend",
+      "taghelper",
+      "productivity"
+    ]
+  }
 }
