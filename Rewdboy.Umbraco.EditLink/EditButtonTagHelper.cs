@@ -23,8 +23,11 @@ public class EditButtonTagHelper : TagHelper
     {
         if (Model == null) return;
 
-        var isLoggedIntoBackoffice = _httpContextAccessor.HttpContext?.Request.Cookies
-            .Any(x => x.Key.StartsWith("UMB_UCONTEXT")) ?? false;
+        //var isLoggedIntoBackoffice = _httpContextAccessor.HttpContext?.Request.Cookies
+        //    .Any(x => x.Key.StartsWith("UMB_UCONTEXT")) ?? false;
+
+        var isLoggedIntoBackoffice = _httpContextAccessor.HttpContext?.Request.Cookies.ContainsKey(EditLinkCookie.Name) ?? false;
+
 
         if (!isLoggedIntoBackoffice)
         {
