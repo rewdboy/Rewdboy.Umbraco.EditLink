@@ -1,69 +1,46 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-	  <Version>1.1.2</Version>
-	  <PackageId>Rewdboy.Umbraco.EditLink</PackageId>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Title>Edit link for quickly switch to edit mode in Umbraco</Title>
-    <Authors>Rodolphe Toots</Authors>
-    <Company>Rewdboy Inc</Company>
-    <PackageTags>umbraco, umbraco-marketplace</PackageTags>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-  </PropertyGroup>
-
 	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+
+		<PackageId>Rewdboy.Umbraco.EditLink</PackageId>
+		<Version>2.0.0</Version>
+
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 		<IncludeRazorContentInPack>true</IncludeRazorContentInPack>
+
+		<!-- Packa Content som SDK redan inkluderar (wwwroot/**) -->
+		<IncludeContentInPack>true</IncludeContentInPack>
+
+		<Title>Edit link for quickly switch to edit mode in Umbraco</Title>
+		<Authors>Rodolphe Toots</Authors>
+		<Company>Rewdboy Inc</Company>
+		<PackageTags>umbraco;umbraco-marketplace</PackageTags>
+
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-	</PropertyGroup>
 
-	<PropertyGroup>
 		<RepositoryUrl>https://github.com/rewdboy/Rewdboy.Umbraco.EditLink</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Views\**" />
-	  <Content Remove="Views\**" />
-	  <EmbeddedResource Remove="Views\**" />
-	  <None Remove="Views\**" />
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="EditLinkAuthController.cs" />
-	  <Compile Remove="EditLinkAuthSurfaceController.cs" />
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="[16.0.0, 18.0.0)" />
+		<PackageReference Include="OpenIddict.Server.AspNetCore" Version="[6.0.0, 7.0.0)" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="[14.0.0, 18.0.0)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\css\editbutton.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="wwwroot\css\editbutton.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
 </Project>
