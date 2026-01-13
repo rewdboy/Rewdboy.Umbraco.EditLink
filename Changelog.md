@@ -1,6 +1,19 @@
 ﻿# Changelog
 
-## [1.1.3] – 2025-01-11
+## [2.1.0] – 2025-01-13
+### Added
+- Configurable button position via `corner` attribute (`top-right`, `top-left`, `bottom-right`, `bottom-left`)
+- Short-hand aliases for `corner` (`tr`, `tl`, `br`, `bl`)
+- Optional `offset` attribute to control distance from viewport edges
+- Improved CSS structure with a dedicated container element for positioning
+
+### Changed
+- Button positioning is now handled exclusively by the container element instead of the button itself
+- CSS updated to prevent positional conflicts when switching corners
+
+---
+
+## [2.0.0] – 2025-01-11
 ### ⚠️ Breaking
 - Requires .NET 9 and Umbraco 16+
 - Removed all JavaScript

@@ -14,7 +14,7 @@ namespace Rewdboy.Umbraco.EditLink
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUmbracoContextAccessor _umbracoContextAccessor;
 
-        // För att bara injicera CSS en gång per request
+        // Injecta CSS max 1 gång per request
         private const string CssInjectedKey = "Rewdboy.Umbraco.EditLink.CssInjected";
 
         public EditButtonTagHelper(
@@ -29,40 +29,54 @@ namespace Rewdboy.Umbraco.EditLink
         public IPublishedContent? Model { get; set; }
 
         /// <summary>
-        /// Om true så injiceras en CSS-link (en gång per request).
+        /// Placement corner for the button.
+        /// Allowed: top-right (default), top-left, bottom-right, bottom-left
+        /// </summary>
+        [HtmlAttributeName("corner")]
+        public string? Corner { get; set; } = "top-right";
+
+        /// <summary>
+        /// Offset in pixels from the chosen corner (default 16).
+        /// </summary>
+        [HtmlAttributeName("offset")]
+        public int Offset { get; set; } = 16;
+
+        /// <summary>
+        /// Whether to inject the CSS link tag automatically (default true).
         /// </summary>
         [HtmlAttributeName("inject-css")]
         public bool InjectCss { get; set; } = true;
 
         /// <summary>
-        /// Om du vill override:a CSS-url.
-        /// - I webbprojekt: "/css/editbutton.css"
-        /// - I paket/RCL: "/_content/Rewdboy.Umbraco.EditLink/css/editbutton.css"
+        /// Override CSS url if needed.
+        /// Default (NuGet/RCL): /_content/Rewdboy.Umbraco.EditLink/css/editbutton.css
         /// </summary>
         [HtmlAttributeName("css-url")]
         public string? CssUrl { get; set; }
 
+        /// <summary>
+        /// Button title attribute.
+        /// </summary>
         [HtmlAttributeName("title")]
         public string Title { get; set; } = "Edit page";
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             var http = _httpContextAccessor.HttpContext;
-
             if (http is null || Model is null)
             {
                 output.SuppressOutput();
                 return;
             }
 
-            // 1) Visa aldrig i preview
+            // 1) Never show in preview
             if (IsPreviewRequest(http))
             {
                 output.SuppressOutput();
                 return;
             }
 
-            // 2) Är vår egna auth-cookie giltig?
+            // 2) Must be authenticated via our scheme (set by OpenIddict event handler)
             var authResult = http.AuthenticateAsync(EditLinkComposer.Scheme).GetAwaiter().GetResult();
             if (!authResult.Succeeded)
             {
@@ -70,28 +84,26 @@ namespace Rewdboy.Umbraco.EditLink
                 return;
             }
 
-            // 3) Inject CSS en gång per request (valfritt)
-            if (InjectCss)
+            // 3) Inject CSS once per request (optional)
+            if (InjectCss && !http.Items.ContainsKey(CssInjectedKey))
             {
-                var cssUrl = CssUrl;
+                http.Items[CssInjectedKey] = true;
 
-                // När du kör koden i webbprojekt (debug): lägg CSS i wwwroot/css/editbutton.css
-                //cssUrl ??= "/css/editbutton.css";
-
-                // När du går tillbaka till paket/RCL senare, byt till:
-                 cssUrl ??= "/_content/Rewdboy.Umbraco.EditLink/css/editbutton.css";
-
-                if (!http.Items.ContainsKey(CssInjectedKey))
-                {
-                    http.Items[CssInjectedKey] = true;
-                    output.PreElement.AppendHtml($@"<link rel=""stylesheet"" href=""{cssUrl}"" />");
-                }
+                var cssUrl = CssUrl ?? "/_content/Rewdboy.Umbraco.EditLink/css/editbutton.css";
+                output.PreElement.AppendHtml($@"<link rel=""stylesheet"" href=""{cssUrl}"" />");
             }
 
-            // 4) Rendera som fristående element (så den aldrig kan wrapa sidan)
+            // 4) Corner + offset
+            var cornerClass = CornerToClass(Corner);
+            var offset = Offset < 0 ? 0 : Offset;
+
+            // 5) Render as a standalone element so it never "wraps" the page
             output.TagName = "span";
             output.TagMode = TagMode.StartTagAndEndTag;
-            output.Attributes.SetAttribute("class", "rewdboy-editlink-container");
+
+            output.Attributes.SetAttribute("class", $"rewdboy-editlink-container {cornerClass}");
+            output.Attributes.SetAttribute("style", $"--rewdboy-editlink-offset:{offset}px;");
+            output.Attributes.SetAttribute("data-editlink", "1");
 
             var editUrl = $"/umbraco/section/content/workspace/document/edit/{Model.Key:D}";
 
@@ -101,16 +113,40 @@ namespace Rewdboy.Umbraco.EditLink
    rel=""noopener noreferrer""
    class=""edit-page-btn""
    title=""{HtmlEncode(Title)}"">
-    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'
-         style='width:20px;height:20px;fill:currentColor;'>
-      <path d='M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z'/>
-    </svg>
+  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'
+       style='width:20px;height:20px;fill:currentColor;'>
+    <path d='M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z'/>
+  </svg>
 </a>");
         }
 
+        private static string CornerToClass(string? corner)
+        {
+            var value = (corner ?? "top-right").Trim().ToLowerInvariant();
+
+            return value switch
+            {
+                // top-right (default)
+                "top-right" or "topright" or "tr" => "rewdboy-corner-top-right",
+
+                // top-left
+                "top-left" or "topleft" or "tl" => "rewdboy-corner-top-left",
+
+                // bottom-right
+                "bottom-right" or "bottomright" or "br" => "rewdboy-corner-bottom-right",
+
+                // bottom-left
+                "bottom-left" or "bottomleft" or "bl" => "rewdboy-corner-bottom-left",
+
+                // fallback
+                _ => "rewdboy-corner-top-right"
+            };
+        }
+
+
         private bool IsPreviewRequest(HttpContext http)
         {
-            // Bästa sättet: UmbracoContext → PublishedRequest.IsPreview (kan variera per version)
+            // Primary: UmbracoContext PublishedRequest.IsPreview (varies between versions, so reflection)
             if (_umbracoContextAccessor.TryGetUmbracoContext(out var umbCtx))
             {
                 var pr = umbCtx.PublishedRequest;
@@ -125,7 +161,7 @@ namespace Rewdboy.Umbraco.EditLink
                 }
             }
 
-            // Fallback: vanlig preview-flagga i querystring
+            // Fallback: query string preview flag
             if (http.Request.Query.Keys.Any(k => k.Equals("umbPreview", StringComparison.OrdinalIgnoreCase)))
                 return true;
 
@@ -134,7 +170,6 @@ namespace Rewdboy.Umbraco.EditLink
 
         private static string HtmlEncode(string input)
         {
-            // Minimal encoding för Title-attributet
             return input
                 .Replace("&", "&amp;", StringComparison.Ordinal)
                 .Replace("\"", "&quot;", StringComparison.Ordinal)

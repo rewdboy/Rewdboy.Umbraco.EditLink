@@ -1,20 +1,23 @@
 ﻿
 .edit-page-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
     z-index: 9999;
     background-color: #3544b1; /* Umbraco Lila */
     color: white !important;
     width: 45px;
     height: 45px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     transition: all 0.2s ease-in-out;
     border: 2px solid rgba(255,255,255,0.2);
+    text-decoration: none;
 }
 
     .edit-page-btn:hover {
@@ -28,3 +31,31 @@
         height: 20px;
         fill: currentColor;
     }
+
+
+.rewdboy-editlink-container {
+    position: fixed;
+    z-index: 99999;
+    --rewdboy-editlink-offset: 16px;
+}
+
+/* Default: top-right */
+.rewdboy-corner-top-right {
+    top: var(--rewdboy-editlink-offset);
+    right: var(--rewdboy-editlink-offset);
+}
+
+.rewdboy-corner-top-left {
+    top: var(--rewdboy-editlink-offset);
+    left: var(--rewdboy-editlink-offset);
+}
+
+.rewdboy-corner-bottom-right {
+    bottom: var(--rewdboy-editlink-offset);
+    right: var(--rewdboy-editlink-offset);
+}
+
+.rewdboy-corner-bottom-left {
+    bottom: var(--rewdboy-editlink-offset);
+    left: var(--rewdboy-editlink-offset);
+}
