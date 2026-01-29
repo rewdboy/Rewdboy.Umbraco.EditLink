@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+
+## [2.1.1] - 2026-01-29
+### Fixed
+- Fixed OpenIddict version conflicts when used with Umbraco 17.
+
+
 ## [2.1.0] – 2025-01-13
 ### Added
 - Configurable button position via `corner` attribute (`top-right`, `top-left`, `bottom-right`, `bottom-left`)
