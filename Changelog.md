@@ -1,6 +1,12 @@
 ﻿# Changelog
 
 
+## [2.1.2] – 2026-01-31
+### Fixed
+- Fixed an issue in Umbraco 17 where the TagHelper did not accept `ContentModel` as input.
+- The edit button now supports both `IPublishedContent` and `ContentModel` in Razor views.
+
+
 ## [2.1.1] - 2026-01-29
 ### Fixed
 - Fixed OpenIddict version conflicts when used with Umbraco 17.

@@ -3,7 +3,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Umbraco.Cms.Core.Models; // ContentModel
 using Umbraco.Cms.Core.Models.PublishedContent;
+
 using Umbraco.Cms.Core.Web;
 
 namespace Rewdboy.Umbraco.EditLink
@@ -25,8 +27,13 @@ namespace Rewdboy.Umbraco.EditLink
             _umbracoContextAccessor = umbracoContextAccessor;
         }
 
+        //[HtmlAttributeName("model")]
+        //public IPublishedContent? Model { get; set; }
+
+
         [HtmlAttributeName("model")]
-        public IPublishedContent? Model { get; set; }
+        public object? Model { get; set; }
+
 
         /// <summary>
         /// Placement corner for the button.
@@ -63,7 +70,16 @@ namespace Rewdboy.Umbraco.EditLink
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             var http = _httpContextAccessor.HttpContext;
-            if (http is null || Model is null)
+
+
+            //if (http is null || Model is null)
+            //{
+            //    output.SuppressOutput();
+            //    return;
+            //}
+
+            var published = TryGetPublishedContent(Model);
+            if (http is null || published is null)
             {
                 output.SuppressOutput();
                 return;
@@ -105,7 +121,9 @@ namespace Rewdboy.Umbraco.EditLink
             output.Attributes.SetAttribute("style", $"--rewdboy-editlink-offset:{offset}px;");
             output.Attributes.SetAttribute("data-editlink", "1");
 
-            var editUrl = $"/umbraco/section/content/workspace/document/edit/{Model.Key:D}";
+            //var editUrl = $"/umbraco/section/content/workspace/document/edit/{Model.Key:D}";
+            var editUrl = $"/umbraco/section/content/workspace/document/edit/{published.Key:D}";
+
 
             output.Content.SetHtmlContent($@"
 <a href=""{editUrl}""
@@ -118,6 +136,24 @@ namespace Rewdboy.Umbraco.EditLink
     <path d='M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z'/>
   </svg>
 </a>");
+        }
+
+
+        private static IPublishedContent? TryGetPublishedContent(object? model)
+        {
+            if (model is null) return null;
+
+            if (model is IPublishedContent pc) return pc;
+
+            // Umbraco.Cms.Core.Models.ContentModel wrapper (vanligt i Umbraco 17 views)
+            if (model is ContentModel cm) return cm.Content;
+
+            // Fallback: om någon skickar en ModelsBuilder-typ som har en Content-property
+            var prop = model.GetType().GetProperty("Content");
+            if (prop?.CanRead == true && typeof(IPublishedContent).IsAssignableFrom(prop.PropertyType))
+                return prop.GetValue(model) as IPublishedContent;
+
+            return null;
         }
 
         private static string CornerToClass(string? corner)
