@@ -53,10 +53,13 @@ Place the TagHelper in your layout (e.g. `_Layout.cshtml`):
 Choose placement using the `corner` attribute  
 (default is top-right):
 
-`<umbraco-edit-button model="Model" corner="tr" />
-<umbraco-edit-button model="Model" corner="tl" />
-<umbraco-edit-button model="Model" corner="br" />
-<umbraco-edit-button model="Model" corner="bl" />` 
+`<umbraco-edit-button model="Model" corner="tr" />`
+
+`<umbraco-edit-button model="Model" corner="tl" />`
+
+`<umbraco-edit-button model="Model" corner="br" />`
+
+`<umbraco-edit-button model="Model" corner="bl" />` 
 
 Optional offset (in pixels):
 
