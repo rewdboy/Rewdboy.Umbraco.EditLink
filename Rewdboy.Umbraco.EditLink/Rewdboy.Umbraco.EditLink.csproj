@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<!-- net9.0 => Umbraco 16, net10.0 => Umbraco 17/18 -->
+		<TargetFrameworks>net9.0;net10.0</TargetFrameworks>
 
 		<PackageId>Rewdboy.Umbraco.EditLink</PackageId>
-		<Version>2.1.2</Version>
+		<Version>2.2.0</Version>
 
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -34,10 +35,18 @@
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Umbraco.Cms.Web.Website" Version="[16.0.0, 18.0.0)" />
-		<PackageReference Include="OpenIddict.Server.AspNetCore" Version="[6.0.0, 8.0.0)" PrivateAssets="all" />
+	<!-- Umbraco 16 (.NET 9) -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="[16.0.0, 17.0.0)" />
+	</ItemGroup>
 
+	<!-- Umbraco 17 och 18 (.NET 10) -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="[17.0.0, 19.0.0)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="OpenIddict.Server.AspNetCore" Version="[6.0.0, 8.0.0)" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>

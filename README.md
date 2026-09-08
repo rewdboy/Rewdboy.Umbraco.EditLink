@@ -98,10 +98,11 @@ You can also override the stylesheet URL:
 
 ## Compatibility
 
--   Umbraco 16.x
-    
--   Umbraco 17.x
-    
+| Umbraco | .NET | Package target |
+|---------|------|----------------|
+| 16.x    | 9    | `net9.0`       |
+| 17.x    | 10   | `net10.0`      |
+| 18.x    | 10   | `net10.0`      |
 
 ----------
 

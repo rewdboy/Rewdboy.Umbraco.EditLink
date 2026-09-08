@@ -1,6 +1,15 @@
 ﻿# Changelog
 
 
+## [2.2.0] – 2026-09-08
+### Added
+- Support for **Umbraco 18**.
+- The package now multi-targets `net9.0` (Umbraco 16) and `net10.0` (Umbraco 17 and 18).
+
+### Changed
+- Umbraco dependency ranges are now per target framework: `[16.0.0, 17.0.0)` for `net9.0` and `[17.0.0, 19.0.0)` for `net10.0`.
+
+
 ## [2.1.2] – 2026-01-31
 ### Fixed
 - Fixed an issue in Umbraco 17 where the TagHelper did not accept `ContentModel` as input.

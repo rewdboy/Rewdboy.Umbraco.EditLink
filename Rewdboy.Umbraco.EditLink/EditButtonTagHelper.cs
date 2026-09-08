@@ -145,7 +145,7 @@ namespace Rewdboy.Umbraco.EditLink
 
             if (model is IPublishedContent pc) return pc;
 
-            // Umbraco.Cms.Core.Models.ContentModel wrapper (vanligt i Umbraco 17 views)
+            // Umbraco.Cms.Core.Models.ContentModel wrapper (vanligt i Umbraco 17+ views)
             if (model is ContentModel cm) return cm.Content;
 
             // Fallback: om någon skickar en ModelsBuilder-typ som har en Content-property
