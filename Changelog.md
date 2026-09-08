@@ -9,6 +9,9 @@
 ### Changed
 - Umbraco dependency ranges are now per target framework: `[16.0.0, 17.0.0)` for `net9.0` and `[17.0.0, 19.0.0)` for `net10.0`.
 
+### Security
+- Pinned transitive dependencies `MessagePack` (3.1.8) and `MailKit` (4.17.0) to versions without known vulnerabilities.
+
 
 ## [2.1.2] – 2026-01-31
 ### Fixed

@@ -29,6 +29,8 @@
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<!-- Lägg .nupkg direkt i lokal NuGet-källa vid Release-build -->
+		<PackageOutputPath Condition="'$(Configuration)' == 'Release'">D:\NuGetLocal</PackageOutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -47,6 +49,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="OpenIddict.Server.AspNetCore" Version="[6.0.0, 8.0.0)" PrivateAssets="all" />
+		<!-- Added to address known vulnerabilities in transitive dependencies -->
+		<PackageReference Include="MessagePack" Version="3.1.8" />
+		<PackageReference Include="MailKit" Version="4.17.0" />
 	</ItemGroup>
 
 	<ItemGroup>
