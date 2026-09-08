@@ -1,0 +1,66 @@
+name: Release
+
+# Skapar en GitHub Release automatiskt när en versionstagg (v*) pushas.
+# Kan även köras manuellt via "Run workflow" för en befintlig tagg.
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Befintlig tagg att skapa release för (t.ex. v2.2.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve tag
+        id: tag
+        # Vid push används taggen från eventet, vid manuell körning används input.
+        run: |
+          TAG="${{ github.event.inputs.tag || github.ref_name }}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.tag.outputs.tag }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            9.0.x
+            10.0.x
+
+      - name: Pack
+        # PackageOutputPath i csproj pekar på D:\NuGetLocal (Windows), så vi
+        # skriver över med -o för att få paketet till en känd mapp på runnern.
+        run: dotnet pack Rewdboy.Umbraco.EditLink/Rewdboy.Umbraco.EditLink.csproj -c Release -o ./artifacts -p:PackageOutputPath=./artifacts
+
+      - name: Extract changelog section
+        id: notes
+        # Plockar ut avsnittet "## [x.y.z]" fram till nästa "## [" ur CHANGELOG.md.
+        run: |
+          VERSION="${{ steps.tag.outputs.version }}"
+          awk -v ver="$VERSION" '
+            $0 ~ "^## \\[" ver "\\]" { found=1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md > release_notes.md
+          if [ ! -s release_notes.md ]; then
+            echo "Ingen changelog-sektion hittades för $VERSION." > release_notes.md
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.tag }}
+          body_path: release_notes.md
+          files: artifacts/*.nupkg
