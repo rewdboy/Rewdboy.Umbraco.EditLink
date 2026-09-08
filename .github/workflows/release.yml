@@ -38,10 +38,15 @@ jobs:
             9.0.x
             10.0.x
 
+      - name: Build
+        # Bygg båda målramverken först. GeneratePackageOnBuild stängs av här,
+        # annars försöker det första inre bygget (net9.0) packa innan net10.0 finns.
+        run: dotnet build Rewdboy.Umbraco.EditLink/Rewdboy.Umbraco.EditLink.csproj -c Release -p:GeneratePackageOnBuild=false
+
       - name: Pack
         # PackageOutputPath i csproj pekar på D:\NuGetLocal (Windows), så vi
         # skriver över med -o för att få paketet till en känd mapp på runnern.
-        run: dotnet pack Rewdboy.Umbraco.EditLink/Rewdboy.Umbraco.EditLink.csproj -c Release -o ./artifacts -p:PackageOutputPath=./artifacts
+        run: dotnet pack Rewdboy.Umbraco.EditLink/Rewdboy.Umbraco.EditLink.csproj -c Release --no-build -o ./artifacts -p:GeneratePackageOnBuild=false -p:PackageOutputPath=./artifacts
 
       - name: Extract changelog section
         id: notes
