@@ -44,9 +44,12 @@ jobs:
         run: dotnet build Rewdboy.Umbraco.EditLink/Rewdboy.Umbraco.EditLink.csproj -c Release -p:GeneratePackageOnBuild=false
 
       - name: Pack
-        # PackageOutputPath i csproj pekar på D:\NuGetLocal (Windows), så vi
-        # skriver över med -o för att få paketet till en känd mapp på runnern.
-        run: dotnet pack Rewdboy.Umbraco.EditLink/Rewdboy.Umbraco.EditLink.csproj -c Release --no-build -o ./artifacts -p:GeneratePackageOnBuild=false -p:PackageOutputPath=./artifacts
+        # -o skriver över PackageOutputPath (som i csproj pekar på D:\NuGetLocal)
+        # så att paketet hamnar i ./artifacts i repo-roten på runnern.
+        run: |
+          dotnet pack Rewdboy.Umbraco.EditLink/Rewdboy.Umbraco.EditLink.csproj -c Release --no-build -p:GeneratePackageOnBuild=false -o "$GITHUB_WORKSPACE/artifacts"
+          ls -la "$GITHUB_WORKSPACE/artifacts"
+          test -n "$(ls "$GITHUB_WORKSPACE"/artifacts/*.nupkg 2>/dev/null)" || { echo "Ingen .nupkg skapades"; exit 1; }
 
       - name: Extract changelog section
         id: notes
@@ -68,4 +71,5 @@ jobs:
           tag_name: ${{ steps.tag.outputs.tag }}
           name: ${{ steps.tag.outputs.tag }}
           body_path: release_notes.md
-          files: artifacts/*.nupkg
+          files: ${{ github.workspace }}/artifacts/*.nupkg
+          fail_on_unmatched_files: true
