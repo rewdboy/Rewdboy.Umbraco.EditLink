@@ -1,6 +1,12 @@
 ﻿# Changelog
 
 
+## [2.2.1] – 2026-09-13
+### Added
+- Umbraco Marketplace metadata via `umbraco-marketplace.json` (category **Editor Tools** / **Content Management**, tags, icon and screenshot).
+- NuGet package metadata: `Description`, `PackageProjectUrl` and `PackageIcon`.
+
+
 ## [2.2.0] – 2026-09-08
 ### Added
 - Support for **Umbraco 18**.

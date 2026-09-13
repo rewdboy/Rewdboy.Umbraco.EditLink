@@ -5,6 +5,8 @@ When logged into the Umbraco backoffice, the button appears on the site and lets
 
 ![Edit link button on the front-end](https://raw.githubusercontent.com/rewdboy/Rewdboy.Umbraco.EditLink/master/docs/images/editbutton_example.png)
 
+Available on [NuGet](https://www.nuget.org/packages/Rewdboy.Umbraco.EditLink) and the [Umbraco Marketplace](https://marketplace.umbraco.com/package/rewdboy.umbraco.editlink).
+
 ## ⚠️ Breaking changes (v2.0.0)  
 - Requires **.NET 9**  
 - - Supports **Umbraco 16+ only**  

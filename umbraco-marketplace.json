@@ -1,0 +1,27 @@
+{
+  "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
+  "Title": "Umbraco Quick Edit Button",
+  "Description": "A lightweight, non-intrusive package for Umbraco 16+ that adds a floating Edit Page button to the website frontend. Visible only to authenticated backoffice users, it opens the current page directly in edit mode. No client-side JavaScript, fully customizable via CSS.",
+  "Category": "Editor Tools",
+  "AlternateCategory": "Content Management",
+  "Tags": [
+    "editor",
+    "edit-button",
+    "frontend",
+    "taghelper",
+    "backoffice",
+    "productivity"
+  ],
+  "LicenseTypes": [
+    "Free"
+  ],
+  "PackageIconUrl": "https://raw.githubusercontent.com/rewdboy/Rewdboy.Umbraco.EditLink/master/docs/images/editbutton_example.png",
+  "DocumentationUrl": "https://github.com/rewdboy/Rewdboy.Umbraco.EditLink#readme",
+  "IssueTrackerUrl": "https://github.com/rewdboy/Rewdboy.Umbraco.EditLink/issues",
+  "Screenshots": [
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/rewdboy/Rewdboy.Umbraco.EditLink/master/docs/images/editbutton_example.png",
+      "Caption": "Floating Edit Page button shown on the frontend for logged-in backoffice users"
+    }
+  ]
+}

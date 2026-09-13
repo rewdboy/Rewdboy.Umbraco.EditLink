@@ -5,7 +5,7 @@
 		<TargetFrameworks>net9.0;net10.0</TargetFrameworks>
 
 		<PackageId>Rewdboy.Umbraco.EditLink</PackageId>
-		<Version>2.2.0</Version>
+		<Version>2.2.1</Version>
 
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -17,9 +17,15 @@
 		<IncludeContentInPack>true</IncludeContentInPack>
 
 		<Title>Edit link for quickly switch to edit mode in Umbraco</Title>
+		<Description>A lightweight, non-intrusive package for Umbraco 16+ that adds a floating Edit Page button to the website frontend. Visible only to authenticated backoffice users, it opens the current page directly in edit mode. No client-side JavaScript, fully customizable via CSS.</Description>
 		<Authors>Rodolphe Toots</Authors>
 		<Company>Rewdboy Inc</Company>
+		<!-- Taggen umbraco-marketplace krävs för att paketet ska listas på Umbraco Marketplace.
+			 Kategori, ikon och skärmdumpar läses från umbraco-marketplace.json i repo-roten,
+			 som Marketplace hämtar via PackageProjectUrl/RepositoryUrl. -->
 		<PackageTags>umbraco;umbraco-marketplace</PackageTags>
+		<PackageProjectUrl>https://github.com/rewdboy/Rewdboy.Umbraco.EditLink</PackageProjectUrl>
+		<PackageIcon>icon.png</PackageIcon>
 
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -57,6 +63,8 @@
 	<ItemGroup>
 		<None Include="..\CHANGELOG.md" Pack="true" PackagePath="\" />
 		<None Include="..\LICENSE.txt" Pack="true" PackagePath="\" />
+		<!-- Paketikon för NuGet/Marketplace (återanvänder exempelbilden tills en riktig ikon finns) -->
+		<None Include="..\docs\images\editbutton_example.png" Pack="true" PackagePath="icon.png" />
 		<None Include="..\README.md">
 		  <Pack>True</Pack>
 		  <PackagePath>\</PackagePath>
