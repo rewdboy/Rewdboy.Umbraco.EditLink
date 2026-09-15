@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -67,7 +68,17 @@ namespace Rewdboy.Umbraco.EditLink
         [HtmlAttributeName("title")]
         public string Title { get; set; } = "Edit page";
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        /// <summary>
+        /// Renders the edit button. Flow:
+        /// 1) Resolve <see cref="IPublishedContent"/> from <see cref="Model"/> (IPublishedContent, ContentModel or a Content-property).
+        /// 2) Suppress output in preview mode.
+        /// 3) Suppress output unless the request is authenticated via the package's cookie scheme
+        ///    (set by the OpenIddict event handler when a backoffice user signs in).
+        /// 4) Optionally inject the CSS link once per request.
+        /// 5) Render a positioned container with an accessible link to the backoffice edit view.
+        /// The method is async to avoid blocking a thread on <see cref="AuthenticationHttpContextExtensions.AuthenticateAsync(HttpContext, string)"/>.
+        /// </summary>
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             var http = _httpContextAccessor.HttpContext;
 
@@ -93,7 +104,7 @@ namespace Rewdboy.Umbraco.EditLink
             }
 
             // 2) Must be authenticated via our scheme (set by OpenIddict event handler)
-            var authResult = http.AuthenticateAsync(EditLinkComposer.Scheme).GetAwaiter().GetResult();
+            var authResult = await http.AuthenticateAsync(EditLinkComposer.Scheme);
             if (!authResult.Succeeded)
             {
                 output.SuppressOutput();
@@ -124,17 +135,23 @@ namespace Rewdboy.Umbraco.EditLink
             //var editUrl = $"/umbraco/section/content/workspace/document/edit/{Model.Key:D}";
             var editUrl = $"/umbraco/section/content/workspace/document/edit/{published.Key:D}";
 
+            // Encode once and reuse for title, aria-label and the visually hidden text.
+            // The SVG is decorative only, so it is hidden from assistive technology.
+            var encodedTitle = WebUtility.HtmlEncode(Title);
 
             output.Content.SetHtmlContent($@"
 <a href=""{editUrl}""
    target=""_blank""
    rel=""noopener noreferrer""
    class=""edit-page-btn""
-   title=""{HtmlEncode(Title)}"">
+   title=""{encodedTitle}""
+   aria-label=""{encodedTitle}"">
   <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'
+       aria-hidden='true' focusable='false'
        style='width:20px;height:20px;fill:currentColor;'>
     <path d='M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z'/>
   </svg>
+  <span class=""rewdboy-visually-hidden"">{encodedTitle}</span>
 </a>");
         }
 
@@ -202,15 +219,6 @@ namespace Rewdboy.Umbraco.EditLink
                 return true;
 
             return false;
-        }
-
-        private static string HtmlEncode(string input)
-        {
-            return input
-                .Replace("&", "&amp;", StringComparison.Ordinal)
-                .Replace("\"", "&quot;", StringComparison.Ordinal)
-                .Replace("<", "&lt;", StringComparison.Ordinal)
-                .Replace(">", "&gt;", StringComparison.Ordinal);
         }
     }
 }

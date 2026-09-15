@@ -1,6 +1,18 @@
 ﻿# Changelog
 
 
+## [2.2.2] – 2026-09-14
+### Added
+- Accessibility: the edit link now has an `aria-label` and visually hidden text, the decorative SVG is `aria-hidden`, and a `:focus-visible` outline was added to the default CSS.
+
+### Changed
+- The TagHelper now uses `ProcessAsync` and awaits authentication instead of blocking a thread.
+- `title`/`aria-label` are encoded with `System.Net.WebUtility.HtmlEncode` (handles `'` and non-ASCII correctly).
+
+### Fixed
+- `umbraco-marketplace.json` now validates against the Marketplace schema (`AlternateCategory` set to **Developer Tools**, removed unsupported `PackageIconUrl`), so the category is displayed on Umbraco Marketplace.
+
+
 ## [2.2.1] – 2026-09-13
 ### Added
 - Umbraco Marketplace metadata via `umbraco-marketplace.json` (category **Editor Tools** / **Content Management**, tags, icon and screenshot).
