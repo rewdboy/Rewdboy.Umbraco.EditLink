@@ -4,10 +4,12 @@ using System.Net;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Umbraco.Cms.Core.Hosting;
 using Umbraco.Cms.Core.Models; // ContentModel
 using Umbraco.Cms.Core.Models.PublishedContent;
 
 using Umbraco.Cms.Core.Web;
+using Umbraco.Extensions;
 
 namespace Rewdboy.Umbraco.EditLink
 {
@@ -16,16 +18,19 @@ namespace Rewdboy.Umbraco.EditLink
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUmbracoContextAccessor _umbracoContextAccessor;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         // Injecta CSS max 1 gång per request
         private const string CssInjectedKey = "Rewdboy.Umbraco.EditLink.CssInjected";
 
         public EditButtonTagHelper(
             IHttpContextAccessor httpContextAccessor,
-            IUmbracoContextAccessor umbracoContextAccessor)
+            IUmbracoContextAccessor umbracoContextAccessor,
+            IHostingEnvironment hostingEnvironment)
         {
             _httpContextAccessor = httpContextAccessor;
             _umbracoContextAccessor = umbracoContextAccessor;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         //[HtmlAttributeName("model")]
@@ -57,7 +62,8 @@ namespace Rewdboy.Umbraco.EditLink
 
         /// <summary>
         /// Override CSS url if needed.
-        /// Default (NuGet/RCL): /_content/Rewdboy.Umbraco.EditLink/css/editbutton.css
+        /// Default (NuGet/RCL): absolute URL generated from /_content/Rewdboy.Umbraco.EditLink/css/editbutton.css,
+        /// resolved via Umbraco hosting environment (supports PathBase).
         /// </summary>
         [HtmlAttributeName("css-url")]
         public string? CssUrl { get; set; }
@@ -116,7 +122,7 @@ namespace Rewdboy.Umbraco.EditLink
             {
                 http.Items[CssInjectedKey] = true;
 
-                var cssUrl = CssUrl ?? "/_content/Rewdboy.Umbraco.EditLink/css/editbutton.css";
+                var cssUrl = CssUrl ?? _hostingEnvironment.ToAbsolute("/_content/Rewdboy.Umbraco.EditLink/css/editbutton.css");
                 output.PreElement.AppendHtml($@"<link rel=""stylesheet"" href=""{cssUrl}"" />");
             }
 
@@ -132,8 +138,9 @@ namespace Rewdboy.Umbraco.EditLink
             output.Attributes.SetAttribute("style", $"--rewdboy-editlink-offset:{offset}px;");
             output.Attributes.SetAttribute("data-editlink", "1");
 
-            //var editUrl = $"/umbraco/section/content/workspace/document/edit/{Model.Key:D}";
-            var editUrl = $"/umbraco/section/content/workspace/document/edit/{published.Key:D}";
+            // Build edit URL using Umbraco's resolved backoffice path (respects custom path + PathBase).
+            var backOfficePath = _hostingEnvironment.GetBackOfficePath().TrimEnd('/');
+            var editUrl = $"{backOfficePath}/section/content/workspace/document/edit/{published.Key:D}";
 
             // Encode once and reuse for title, aria-label and the visually hidden text.
             // The SVG is decorative only, so it is hidden from assistive technology.

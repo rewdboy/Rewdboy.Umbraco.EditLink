@@ -1,6 +1,12 @@
 ﻿# Changelog
 
 
+## [2.2.3] – 2026-10-02
+### Fixed
+- Dynamic backoffice edit URL now respects configured `UmbracoPath` (for example `~/cms`) instead of using hardcoded `/umbraco/`.
+- Default CSS URL is now generated as an absolute URL via Umbraco hosting environment, so it works correctly with virtual directories / `PathBase`.
+
+
 ## [2.2.2] – 2026-09-14
 ### Added
 - Accessibility: the edit link now has an `aria-label` and visually hidden text, the decorative SVG is `aria-hidden`, and a `:focus-visible` outline was added to the default CSS.
@@ -15,7 +21,7 @@
 
 ## [2.2.1] – 2026-09-13
 ### Added
-- Umbraco Marketplace metadata via `umbraco-marketplace.json` (category **Editor Tools** / **Content Management**, tags, icon and screenshot).
+- Umbraco Marketplace metadata via `umbraco-marketplace.json` (category/tags/screenshot and package metadata links).
 - NuGet package metadata: `Description`, `PackageProjectUrl` and `PackageIcon`.
 
 
